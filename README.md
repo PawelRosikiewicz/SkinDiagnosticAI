@@ -1,10 +1,11 @@
-# SkinDiagnosticAI
-
 ![skindiagnosticai title image](images/skindiagnosticai_title_image.png)
 
 # SkinDiagnosticAI
 ## Comparison of 5000 AI methods for cancer detection and classyfication on dermatoscopic images from Harvard HAM10000 dataset using FastClassAI workbench   
       
+Author: Pawel Rosikiewicz, Founder, and Team Leader at SwissAI 
+License: MIT
+
 The goal is to quickly test and optimize large number of ml and deep learning models and dataset preprocessing procedures, that are integrated in one python enviroment with FastClassAI workebench.
    
 Main Goals are:
