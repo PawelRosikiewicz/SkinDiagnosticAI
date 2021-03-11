@@ -279,6 +279,7 @@ def deNovoCNN_gridsearch(*,
             print(f"batch_size: {params['batch_size']}") 
             print(f"img_size: {params['img_size']}") 
             print(f"epoch: {params['epoch']}") 
+            print(f"..................................................\n")
         else:
             pass        
    
@@ -383,9 +384,9 @@ def deNovoCNN_gridsearch(*,
         
         # add some info:
         if verbose==True:
-            print(f"............................... input data - info df ...")
+            print("Datagenerator parameters: ",datagen_params_info)
             print(input_data_info_df)
-            print(f"..................................................\n")
+            print(f"\n")
         else:
             pass        
 
