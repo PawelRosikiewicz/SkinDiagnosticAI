@@ -477,8 +477,6 @@ def cnn_data_loader(
     """
     
     
-    
-
     # set up some missing parameters to run the function, 
     
     if params==None: 
