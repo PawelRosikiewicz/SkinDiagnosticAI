@@ -205,8 +205,8 @@ def collect_results(*,
             for filename in selected_filename_list:
                 # load the file and add info on the file name and path to it, 
                 one_results_df = pd.read_csv(filename)
-                one_results_df["full_path"] =  path_to_file
-                one_results_df["filename"] = filename
+                one_results_df["full_path"] = path_to_file
+                one_results_df["file_name"] = filename
 
                 # concatenate all the results into one df, 
                 if c==0:

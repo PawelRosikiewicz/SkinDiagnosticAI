@@ -34,12 +34,39 @@ import matplotlib.pyplot as plt # for making plots,
 
 
 from src.utils.model_summary_plots import  visual_model_summary
-from src.utils.method_comparison_tools import method_comparison_boxplot
+# from src.utils.method_comparison_tools import method_comparison_boxplot # copied here for any potential changes, 
 
 
 
 
-# Function ...................................................................................................... 
+# Function ..........................................................................
+def create_class_colors_dict(*, 
+    list_of_unique_names, 
+    cmap_name="tab20", 
+    cmap_colors_from=0, 
+    cmap_colors_to=1
+):
+    '''Returns dictionary that maps each class name in list_of_unique_names, 
+       to to a distinct RGB color
+       . list_of_unique_names : list with unique, full names of clasesses, group etc..
+       . cmap_name : standard mpl colormap name.
+       . cmap_colors_from, cmap_colors_to, values between 0 and 1, 
+         used to select range of colors in cmap, 
+     '''
+    
+    # create cmap
+    mycmap = plt.cm.get_cmap(cmap_name, len(list_of_unique_names)*10000)
+    newcolors = mycmap(np.linspace(cmap_colors_from, cmap_colors_to, len(list_of_unique_names)))
+
+    class_color_dict = dict()
+    for i, un in enumerate(list_of_unique_names):
+        class_color_dict[un] = newcolors[i]
+    
+    return class_color_dict
+
+
+
+# Function .............................................................................
 def load_summary_files(*,
     dataset_name,
     dataset_variants,
@@ -128,7 +155,7 @@ def load_summary_files(*,
             
            
             
-# Function, .................................................................... ..................................             
+# Function .............................................................................             
 def create_new_df_feature(*, df, new_feature_name, old_features_list, return_full_df=True, verbose=False):
     '''
         create new feature by concatanating corresponsing cells 
@@ -181,7 +208,7 @@ def create_new_df_feature(*, df, new_feature_name, old_features_list, return_ful
 
 
 
-# Function ......................................................................................................
+# Function .............................................................................
 def simple_visual_model_summary(*, 
             model_idx_in_sorted_summary_df=0,
             subset_collection_name,
@@ -286,7 +313,7 @@ def simple_visual_model_summary(*,
     
     
     
-# Function ...................................................................................................... 
+# Function .............................................................................
 def prepare_summary_df(*,
         dataset_name,
         dataset_variants,
@@ -345,9 +372,254 @@ def prepare_summary_df(*,
     
     
     
+# Function ..............................................................................
+def method_comparison_boxplot(*, 
+    title="Accuracy of models created with each method\n",  
+    data,         # pd.DataFrame with the results,   
+    figsize=(10,4),
+    # ...
+    col_with_results,       # df colname with values to display, eg: test_accuracy ...
+    col_with_group_names,   # df colname with values that will be displayed as names of each box (these do not have to be unique)
+    col_with_group_ID,      # df colname with values that will be grouped for separate boxes (must be unieque)
+    col_with_group_colors,  # df colname with values that will have different colors (colors can not be mixed within diffeent group_ID)
+    # ... colors
+    cmap="tab10",
+    cmap_colors_from=0, 
+    cmap_colors_to=1,                               
+    # .. legend
+    legend__bbox_to_anchor=(0.9, 1.15), 
+    subplots_adjust_top = 0.8,
+    legend_ncols=4,
+    # .. baseline
+    baseline_title="",       # "most frequent baseline",
+    baseline_loc = -0.05,
+    baseline = 0.25,          
+    top_results = 0.9,      # green zone on a plot, 
+    # ... fontsize
+    title_fontsize=20,
+    legend_fontsize=10,
+    xticks_fontsize=10,
+    yticks_fontsize=15,
+    axes_labels_fontsize=20,
+    # ... axies labels
+    xaxis_label = "Method",
+    yaxis_label = "Accuracy\n",
+    paint_xticks=False
+):
+    """
+        Nice function to create ngs-like boxplots for comparison of acc of differemnt model groups
+        it is more generic version of the abofe function, 
+    """
 
     
-# Function ......................................................................................................    
+    # ...............................................
+    # managment
+    Stop_Function = False
+    
+    # ...............................................
+    # data preparation - step.1 extraction
+    # ...............................................
+
+    # - extract unique values that will be searched, 
+    unique_group_ID               = data.loc[:,col_with_group_ID].unique().tolist()
+    unique_group_color_names      = data.loc[:,col_with_group_colors].unique().tolist()
+    
+    # - map colors onto color_groups_names
+    bx_color_dict = create_class_colors_dict(
+        list_of_unique_names=unique_group_color_names, 
+        cmap_name=cmap, 
+        cmap_colors_from=cmap_colors_from, 
+        cmap_colors_to=cmap_colors_to
+    )   
+    
+    # - lists with data for boxes, 
+    'one item for one box in each'
+    bx_data             = []  
+    bx_names            = []
+    bx_colors           = []
+    bx_id               = []
+    bx_colors_dict_key  = []
+    
+    # - separate all boxes, and then find out what is the color and data associated with that box
+    for one_group_ID in unique_group_ID:
+        bx_id.append(one_group_ID)
+        
+        # get the data and other columns for one box
+        data_df_for_one_box = data.loc[data.loc[:, col_with_group_ID]==one_group_ID,:]
+        
+        # find out, data, name and color to display
+        # .... num. data ....
+        bx_data.append(data_df_for_one_box.loc[:,col_with_results].values) # np.array
+        
+        
+        # .... labels .....
+        one_bx_label = data_df_for_one_box.loc[:,col_with_group_names].unique().tolist()
+        if len(one_bx_label)==1:
+            bx_names.append(one_bx_label[0]) # np.array
+        else:
+            if verbose==1:
+                print(f"{one_group_ID} contains more then one group to display wiht different names !")
+            else:
+                Stop_Function = True
+                pass
+  
+
+        # .... colors ....
+        one_box_color = data_df_for_one_box.loc[:,col_with_group_colors].map(bx_color_dict).iloc[0]
+        color_test_values = data_df_for_one_box.loc[:,col_with_group_colors].unique().tolist()
+        if len(color_test_values)==1:
+            bx_colors.append(one_box_color) # np.array
+            bx_colors_dict_key.append(color_test_values[0])
+        else:
+            if verbose==1:
+                print(f"{one_group_ID} contains more then one COLOR to display wiht different names !")
+            else:
+                Stop_Function = True
+                pass        
+        
+        
+    # - check if everythign is in order
+    if len(bx_colors)!=len(bx_names) and len(bx_names)!=len(bx_data):
+        if verbose==True:
+            print("Error: some data are missing or belong to different gorups, and can not be displayed as coherent bocplot")
+        else:
+            pass
+    else:
+        
+
+        # ...............................................
+        # data preparation - step.2 ordering
+        # ...............................................    
+
+        # find memdians and reorder 
+        bx_medians = list()
+        for i, d in enumerate(bx_data):
+            bx_medians.append(np.median(d))   
+            
+
+        # ...
+        ordered_data_df = pd.DataFrame({
+            "bx_data":    bx_data,
+            "bx_medians": bx_medians,
+            "bx_names":   bx_names,
+            "bx_colors":  bx_colors,
+            "bx_id": bx_id,
+            "bx_colors_dict_key":bx_colors_dict_key
+        })
+        ordered_data_df = ordered_data_df.sort_values("bx_medians", ascending=True)
+        ordered_data_df = ordered_data_df.reset_index(drop=True)
+
+
+        # ...............................................
+        # boxplot
+        # ...............................................    
+        
+        # ...............................................
+        # boxplot,  - plt.boxplot(ordered_bx_data);
+        fig, ax = plt.subplots(figsize=figsize, facecolor="white")
+        fig.suptitle(title, fontsize=title_fontsize)
+
+        # add boxes,
+        bx = ax.boxplot(ordered_data_df["bx_data"], 
+                showfliers=True,                  # remove outliers, because we are interested in a general trend,
+                vert=True,                        # boxes are vertical
+                labels=ordered_data_df["bx_names"],           # x-ticks labels
+                patch_artist=True,
+                widths=0.3
+        )
+        ax.grid(ls="--")
+        ax.spines["top"].set_visible(False)
+        ax.spines["right"].set_visible(False)
+        ax.set_xticklabels(ordered_data_df["bx_names"], rotation=45, fontsize=xticks_fontsize, ha="right")
+        ax.set_yticks([0, .2, .4, .6, .8, 1])
+        ax.set_yticklabels(["0.0", "0.2", "0.4", "0.6", "0.8", "1.0"], fontsize=yticks_fontsize)
+        ax.set_ylabel(yaxis_label, fontsize=axes_labels_fontsize)
+        ax.set_xlabel(xaxis_label, fontsize=axes_labels_fontsize)
+        ax.set_ylim(0,1.02)
+
+ 
+        # add colors to each box individually,
+        for i, j in zip(range(len(bx['boxes'])),range(0, len(bx['caps']), 2)) :
+            median_color  ="black"
+            box_color     = bx_color_dict[ordered_data_df.loc[:,"bx_colors_dict_key"].iloc[i]]
+
+            # set properties of items with the same number as boxes,
+            plt.setp(bx['boxes'][i], color=box_color, facecolor=median_color, linewidth=2, alpha=0.8)
+            plt.setp(bx["medians"][i], color=median_color, linewidth=2)
+            plt.setp(bx["fliers"][i], markeredgecolor="black", marker=".") # outliers
+
+            # set properties of items with the 2x number of features as boxes,
+            plt.setp(bx['caps'][j], color=median_color)
+            plt.setp(bx['caps'][j+1], color=median_color)
+            plt.setp(bx['whiskers'][j], color=median_color)
+            plt.setp(bx['whiskers'][j+1], color=median_color)
+
+         
+        # ...............................................
+        # set colors for xtick labels,  
+        
+        if paint_xticks==True:
+            for i, xtick in enumerate(ax.get_xticklabels()):
+                xtick.set_color(bx_color_dict[ordered_data_df["bx_colors_dict_key"].iloc[i]])
+        else:
+            pass
+            
+        # ...............................................            
+        # legend,    
+        if ordered_data_df["bx_names"].shape[0]>0:
+
+            # create patch for each dataclass, - adapted to even larger number of classes then selected for example images, 
+            patch_list_for_legend =[]
+            for i, m_name in enumerate(list(bx_color_dict.keys())):
+                label_text = f"{m_name}"
+                patch_list_for_legend.append(mpl.patches.Patch(color=bx_color_dict[m_name], label=label_text))
+
+            # add patches to plot,
+            fig.legend(
+                handles=patch_list_for_legend, frameon=False, 
+                scatterpoints=1, ncol=legend_ncols, 
+                bbox_to_anchor=legend__bbox_to_anchor, fontsize=legend_fontsize)
+            
+            # ...............................................
+            # create space for the legend
+            fig.subplots_adjust(top=subplots_adjust_top)    
+            # ...............................................
+            
+            
+        # ...............................................
+        # add line with baseline
+        ax.axhline(baseline, lw=2, ls="--", color="dimgrey")
+        ax.text(ordered_data_df.shape[0]+0.4, baseline+baseline_loc, baseline_title, ha="right", color="dimgrey", fontsize=yticks_fontsize)        
+
+        
+        # ...............................................
+        # color patches behing boxplots, 
+        patch_width = 1   # ie. 1 = grey patch for 1 and 1 break
+        patch_color = "lightgrey"
+        pathces_starting_x = list(range(0, ordered_data_df.shape[0], patch_width*2))
+        # ...
+        for i, sx in enumerate(pathces_starting_x):
+            rect = plt.Rectangle((sx+0.5, 0), patch_width, 1000, color=patch_color, alpha=0.2, edgecolor=None)
+            ax.add_patch(rect)        
+
+
+        # color patches for styling the accuracy, 
+        rect = plt.Rectangle((0,0), ordered_data_df.shape[0]*100, baseline, color="red", alpha=0.1, edgecolor=None)
+        ax.add_patch(rect)          
+        rect = plt.Rectangle((0,baseline), ordered_data_df.shape[0]*100, top_results-baseline, color="orange", alpha=0.1, edgecolor=None)
+        ax.add_patch(rect)             
+        rect = plt.Rectangle((0, top_results), ordered_data_df.shape[0]*100, 10, color="forestgreen", alpha=0.1, edgecolor=None)
+        ax.add_patch(rect)            
+
+    return fig
+                
+    
+    
+
+    
+    
+    
+# Function .............................................................................  
 def create_boxplot_with_color_classes(*,
     summary_df, 
     figsize              = (10,6),
@@ -418,12 +690,9 @@ def create_boxplot_with_color_classes(*,
     return fig
   
   
+
   
- 
-
-
-
-# Function ......................................................................................................    
+# Function .............................................................................   
 def preapre_table_with_n_best_results_in_each_group(*,
     summary_df,              
     n_top_methods = 1,
@@ -473,3 +742,391 @@ def preapre_table_with_n_best_results_in_each_group(*,
     
     return sorted_best_methods_summary_df
     
+    
+    
+    
+    
+    
+# Function .............................................................................
+def model_summary_plot(*,
+    # input data                                     
+    df,
+    y,
+    boxname,
+    boxcolor,
+    scatterpoints,
+    baseline,
+
+    # fig, general settings, 
+    title=None ,                               
+    figsize=(30,15) ,
+
+    # box colors
+    boxcolor_dict = None,
+    cmap="tab10",
+    cmap_colors_from=0,
+    cmap_colors_to=0.5,                               
+
+    # axes
+    xaxis_label = None,
+    yaxis_label = None, # if Noene == ydata_colname
+    grid_dct=dict(lw=1),                   
+
+    # scatterpoints,
+    full_model_marker ="*",
+    full_model_markersize=60,
+    full_model_markercolor="black",
+
+    # legend
+    add_legend=True,
+    subplots_adjust_top = 0.7,
+    legend_title=None,
+    legend__bbox_to_anchor=(0.4, 0.9),
+    legend_ncols=1,
+
+    # baseline
+    baseline_title = "baseline",
+    baseline_loc =-0.09,
+    use_fixed_baselines = True,
+    baseline_limit_list = [0.5, 0.9, 1.5], # the last one 
+    baseline_color_list = ["red", "orange", "forestgreen"],
+
+    # fontsizes
+    fontsize_scale =1,
+    title_fontsize =30,
+    legend_fontsize=20,
+    xticks_fontsize=20,
+    yticks_fontsize=20,
+    axes_labels_fontsize=25,
+    ):
+
+    '''
+        NGS-like boxplot for displaying accuracy, or other results obtained with large number of models
+        
+        # input data                                     
+        df            : pd.DataFrame
+        y             : str, or list with values, df colname with values to display, eg: test_accuracy ...
+        boxname       : str, or list with values, df colname with values that will be displayed as names of each box, if None, 
+                        (these, do not have to be unique, becaue box colors are also informative, 
+                        and you may use shorter names to make the plot nicer, )
+        boxcolor      : str, or list with values, if None, all boxes will hae the same colors, and there is no legend displayed, 
+        scatterpoints : list, with True/False values, data points in each group used as scatter points, 
+                        not the part of boxplot, if None, noe will be made, 
+        baseline      : str, or list with values, df colname with values for baseline thta will be displayed on a bacground, 
+        
+        # horizontal patches
+        use_fixed_baselines  : bool , if True, three phorizontal patches of the same height will be added to plot, 
+        baseline_limit_list  : list with 3 floats, eg: [0.5, 0.9, 1.5], each float is the upper limit of the horizontal patch, 
+                               starting from the plot bottom
+        
+
+    '''
+
+    # setup
+    assert type(df)==pd.DataFrame, "error: df is not pandas DataFrame"
+
+
+    # . set plot x/y labels,                  
+    if xaxis_label is None:
+        if isinstance(boxname, str):
+             xaxis_label=boxname
+        else:
+             xaxis_label="method"              
+
+    if yaxis_label is None:
+        if isinstance(y, str):
+             yaxis_label=y
+        else:
+             yaxis_label="y"                                               
+
+    # . fontsizes
+    title_fontsize       = title_fontsize*fontsize_scale
+    legend_fontsize      = legend_fontsize*fontsize_scale
+    xticks_fontsize      = xticks_fontsize*fontsize_scale
+    yticks_fontsize      = yticks_fontsize*fontsize_scale
+    axes_labels_fontsize = axes_labels_fontsize*fontsize_scale
+                
+    # data preparation 
+
+    # . extract columns, as list
+    if isinstance(y , str):
+        y = df.loc[:, y].values.tolist()
+    else:
+        pass
+
+    if isinstance(boxname , str):
+        boxname = df.loc[:, boxname].values.tolist()
+    else:
+        pass
+
+    #. optional values, 
+    if boxcolor is not None:
+        if isinstance(boxcolor , str):
+            boxcolor = df.loc[:, boxcolor].values.tolist()
+        else:
+            pass
+    else:
+        boxcolor = ["method"]*len(y)
+
+    if baseline is not None:
+        if isinstance(baseline , str):
+            baseline = df.loc[:, baseline].values.tolist()
+        else:
+            pass
+    else:
+        baseline = [0.5]*len(y)
+
+    if scatterpoints is not None:
+        if isinstance(scatterpoints , str):
+            scatterpoints = df.loc[:, scatterpoints].values.tolist()
+        else:
+            pass
+    else:
+        scatterpoints = [False]*len(y) # ie, No data wil be plotted as scatter point, 
+
+    # . create unique boxnames qwith colors and method names, 
+    if boxcolor is not None:
+        boxname_full  = [f"{x}__{y}" for (x,y) in zip (boxname, boxcolor)] # used to search values, 
+    else:
+        boxname_full = boxname
+
+
+    # assign colors to each boxcolor name
+
+    # . define colors for each class in boccolor
+    if boxcolor_dict is None:
+        boxcolor_dict = create_class_colors_dict(
+                list_of_unique_names = pd.Series(boxcolor).unique().tolist(), 
+                cmap_name            = cmap, 
+                cmap_colors_from     = cmap_colors_from, 
+                cmap_colors_to       = cmap_colors_to
+            )    
+    else:
+        pass
+
+    # . map colors onto boxcolor, that are names
+    boxcolor_value = pd.Series(boxcolor).map(boxcolor_dict)
+
+    # build pandas df wiht all data
+    boxplotdf = pd.DataFrame({
+        "y": y,                               # value on y-axis
+        "boxname_full": boxname_full,         # used to separate each box (combines x-axis anme and color)
+        "boxcolor_value": boxcolor_value,     # color for bocplot, 
+        "boxname":boxname,                    # displayed on x axis, 
+        "boxcolor":boxcolor,                  # displayed on legend, 
+        "baseline": baseline,                 # displayed as bacground value, 
+        "scatterpoints": scatterpoints,       # it True, the point is plotted as scatterplot, 
+    })
+
+    # data preparation - part 2 - prepare array and ncols for plot
+
+    # . lists with data for boxes, 
+    'one item for one box in each'
+    x_axis_name    = [] # xtick labels
+    x_axis_color   = [] # xtick label color
+    bx_x           = []
+    bx_y           = [] 
+    bx_color       = [] # box color, (only for boxes)
+    sc_y           = []
+    sc_x           = []
+    baseline_x     = []
+    baseline_y     = []
+    median_y       = []
+
+    # . fill in values, in proper order with positons on x axis, 
+    for i, one_boxname_full in enumerate(pd.Series(boxname_full).unique().tolist()):
+
+        # find data for boxes
+        boxplotdf_bx_subset = boxplotdf.loc[(boxplotdf.boxname_full==one_boxname_full) & (boxplotdf.scatterpoints==False), :]
+        if boxplotdf_bx_subset.shape[0]>0:
+            bx_x.append(i)
+            bx_y.append(boxplotdf_bx_subset.loc[:,"y"].values.tolist())
+            bx_color.append(boxplotdf_bx_subset.boxcolor_value.iloc[0])
+        else:
+            pass
+
+        # find data for scatter points, 
+        boxplotdf_sc_subset = boxplotdf.loc[(boxplotdf.boxname_full==one_boxname_full) & (boxplotdf.scatterpoints==True), :]
+        sc_values = boxplotdf_sc_subset.loc[:,"y"].values.tolist()
+        if len(sc_values)>0:
+            sc_x.extend([i]*len(sc_values))
+            sc_y.extend(sc_values)  
+        else:
+            pass
+
+        # axis_name, baseline, 
+        boxplotdf_group_subset = boxplotdf.loc[boxplotdf.boxname_full==one_boxname_full, :]
+        baseline_x.append(i)
+        baseline_y.append(boxplotdf_group_subset.baseline.max())  
+        median_y.append(boxplotdf_group_subset.y.median())
+        x_axis_name.append(boxplotdf_group_subset.boxname.iloc[0])
+        x_axis_color.append(boxplotdf_group_subset.boxcolor_value.iloc[0])
+
+
+    # order items on x axis, 
+
+    # . dict with key == old postion, value == new postion
+    '''
+        I am using dict, because each item may have different number of 
+        elements, and they are not in order, (ie one category may be nmissing and present in sc or bx)
+        that is completely normal !
+    '''
+    x_order    = dict(zip(pd.Series(median_y).sort_values().index.values.tolist(), list(range(len(median_y)))))
+    bx_x       = pd.Series(bx_x).map(x_order).values.tolist()
+    sc_x       = pd.Series(sc_x).map(x_order).values.tolist()
+    baseline_x = pd.Series(baseline_x).map(x_order).values.tolist()
+
+    # . created ordered_xticks_labels
+    tempdf = pd.concat([pd.Series(median_y), pd.Series(x_axis_color), pd.Series(x_axis_name),  pd.Series(bx_color), pd.Series(bx_y)], axis=1)
+    tempdf.columns=["median", "x_axis_color","x_axis_name", "bx_color", "by"]
+    tempdf = tempdf.sort_values("median")
+    tempdf.reset_index(drop=True, inplace=True)
+    ordered_xticks_labels = tempdf.x_axis_name.values.tolist()
+    ordered_xticks_colors = tempdf.x_axis_color.values.tolist()
+    ordered_bx_color = tempdf.bx_color.dropna().values.tolist()
+    ordered_b = tempdf.by.dropna().values.tolist()
+
+    # . add small gausion noise to sc_x positions, 
+    sc_x = (np.random.normal(loc=0, scale=0.05, size=len(sc_x))+np.array(sc_x)).tolist()
+
+    
+    
+    # figure
+    
+    fig, ax = plt.subplots(figsize=figsize, facecolor="white")
+    if title is not None:
+        fig.suptitle(title, fontsize=title_fontsize)
+    else:
+        pass
+        
+    # boxplots
+    bx = ax.boxplot(
+        bx_y,
+        positions=bx_x,
+        showfliers=True,                  # remove outliers, because we are interested in a general trend,
+        vert=True,                        # boxes are vertical
+        patch_artist=True,
+        widths=0.3
+    )
+    
+    # . add colors to each box individually,
+    for i, j in zip(range(len(bx['boxes'])),range(0, len(bx['caps']), 2)) :
+        median_color  ="black"
+        box_color     = bx_color[i]
+        
+        # set properties of items with the same number as boxes,
+        plt.setp(bx['boxes'][i], color=box_color, facecolor=median_color, linewidth=2, alpha=0.8)
+        plt.setp(bx["medians"][i], color=median_color, linewidth=2)
+        plt.setp(bx["fliers"][i], markeredgecolor="black", marker=".") # outliers
+
+        # set properties of items with the 2x number of features as boxes,
+        plt.setp(bx['caps'][j], color=median_color)
+        plt.setp(bx['caps'][j+1], color=median_color)
+        plt.setp(bx['whiskers'][j], color=median_color)
+        plt.setp(bx['whiskers'][j+1], color=median_color)
+        
+    # points, 
+    if pd.Series(scatterpoints).sum()>0:
+        ax.scatter(
+            x=sc_x, 
+            y=sc_y,
+            color=full_model_markercolor, 
+            s=full_model_markersize,  
+            marker=full_model_marker, 
+            zorder=100
+        )
+    else:
+        pass    
+
+    # general aestetics, 
+    ax.set_xlim(-0.5, len(x_axis_name)-0.5)
+    ax.grid(ls=":",  color="grey", **grid_dct)
+    ax.spines["top"].set_visible(False)
+    ax.spines["right"].set_visible(False)
+    ax.set_xticks(list(range(len(ordered_xticks_labels))))
+    ax.set_xticklabels(ordered_xticks_labels, rotation=45, fontsize=xticks_fontsize, ha="right")
+    ax.set_yticks([0, .2, .4, .6, .8, 1])
+    ax.set_yticklabels(["0.0", "0.2", "0.4", "0.6", "0.8", "1.0"], fontsize=yticks_fontsize)
+    ax.set_ylabel(yaxis_label, fontsize=axes_labels_fontsize)
+    ax.set_xlabel(xaxis_label, fontsize=axes_labels_fontsize)
+    ax.set_ylim(0,1.02)
+
+    # . add the same color to xtick labels as it is given to the gorup 
+    for i, xtick in enumerate(ax.get_xticklabels()):
+        xtick.set_color(ordered_xticks_colors[i])
+
+    # legend,    
+    if add_legend==True:
+        
+        # . create patch for each dataclass, - adapted to even larger number of classes then selected for example images, 
+        sorted_keys = pd.Series(list(boxcolor_dict.keys())).sort_values().values.tolist()
+        patch_list_for_legend =[]
+        for i, m_name in enumerate(sorted_keys):
+            label_text = f"{m_name}"
+            patch_list_for_legend.append(mpl.patches.Patch(color=boxcolor_dict[m_name], label=label_text))
+
+        # . add patches to plot,
+        leg = fig.legend(
+                handles       = patch_list_for_legend, 
+                frameon       = False, 
+                title         = legend_title,
+                scatterpoints = 1, 
+                ncol          = legend_ncols, 
+                bbox_to_anchor= legend__bbox_to_anchor, 
+                fontsize      = legend_fontsize
+                )
+        plt.setp(leg.get_title(),fontsize=legend_fontsize)#'xx-small')
+
+        # . create space for the legend
+        fig.subplots_adjust(top=subplots_adjust_top)    
+    
+    else:
+        pass
+
+    # color patches behing boxplots, 
+    patch_width = 1   # ie. 1 = grey patch for 1 and 1 break
+    patch_color = "grey"
+    pathces_starting_x = list(range(0, len(x_axis_name), patch_width*2))
+    for i, sx in enumerate(pathces_starting_x):
+        rect = plt.Rectangle(
+                (sx+0.5, 0), 
+                patch_width, 
+                1000, 
+                color=patch_color, 
+                alpha=0.4, 
+                edgecolor=None
+                )
+        ax.add_patch(rect)        
+
+    # horizontal color patches, 
+    if use_fixed_baselines==False:
+        params = dict(width=1, alpha=0.15, edgecolor=None)
+
+        # create color pathes corresponding to baseline in each method
+        for i, (bx, by) in enumerate(zip(baseline_x, baseline_y)):
+            rect = plt.Rectangle((bx-0.5,0), height=by, color=baseline_color_list[0], **params)
+            ax.add_patch(rect)              
+            rect = plt.Rectangle((bx-0.5,by), height=baseline_limit_list[1]-by, color=baseline_color_list[1], **params)
+            ax.add_patch(rect)             
+            rect = plt.Rectangle((bx-0.5,baseline_limit_list[1]), height=1000, color=baseline_color_list[2], **params)
+            ax.add_patch(rect) 
+
+    else:       
+        params = dict(width=len(baseline_x)*100, alpha=0.2, edgecolor=None)
+
+        rect = plt.Rectangle((-0.5,0), height=baseline_limit_list[0], color=baseline_color_list[0], **params)
+        ax.add_patch(rect)          
+        rect = plt.Rectangle((-0.5,baseline_limit_list[0]), height=baseline_limit_list[1]-baseline_limit_list[0], color=baseline_color_list[1], **params)
+        ax.add_patch(rect)             
+        rect = plt.Rectangle((-0.5,baseline_limit_list[1]), height=1000, color=baseline_color_list[2], **params)
+        ax.add_patch(rect)               
+
+        # add line with baseline
+        if baseline_title is not None:
+            ax.axhline(baseline_limit_list[0], lw=2, ls="--", color="dimgrey")
+            ax.text(len(baseline_x)-2, baseline_limit_list[0]+baseline_loc, baseline_title, ha="right", color="dimgrey", fontsize=yticks_fontsize)        
+        else:
+            pass
+     
+    return fig
+
