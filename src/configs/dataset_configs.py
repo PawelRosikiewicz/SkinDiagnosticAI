@@ -134,6 +134,13 @@ DATASET_CONFIGS = {
                 "Cancer_Detection_And_Classification", 
                 "Cancer_Risk_Groups"
                ]
+   },
+   "HAM10000_workshop": {
+     "info": "small dataset prepared to demonstrate PyClass funcitons and pipeline for creating summary in SkinDiagnosticAI feasibiility study",
+     "labels": [
+                "Cancer_Detection_And_Classification", 
+                "Cancer_Risk_Groups"
+               ]
    }
 }
 
