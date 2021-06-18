@@ -31,17 +31,31 @@ The goals of the that study were as follow:
 
 > The notebooks, and software presented in this repository were used to conduct Step 1, of the SkinDiagnosticAI feasibility study. The slides attached below the text show selected results from all steps, including step 2-4"
 
-## About PyClass, a main tool used to conduct feasibility study
-PyClass is an open-sourse, AI workbench for development of classyficaiton models for medical images. It allows for fast, EDA, automated comparison and selection of large number of models, feature extreaction networks, and image classyfication schemas. The piepline, uses only basic, python libraries, such as scipy, tensofrflow, and matplolib, and can be used with python 3.6-3.8. 
-PyClass has been developed prior to feasibility study, as part of of the SkinDiagnosticAI initiative. It can be used independepntly to other projects, with minimal code modyffications. 
-See how PyClass was used for developeinh reliable classificaiton of vehicles on roads on Swissroads project https://github.com/PawelRosikiewicz/Swissroads
+## About PyClass, 
+>  main tool used to conduct feasibility study
 
-### Introductio to PyClass with SkindDiagnosticAI as a working example 
+PyClass is an open-sourse, AI workbench for development of classyficaiton models for medical images.   
+Main functions are as follow:
+* data cleaing, and preparation for keras image dgenerators,
+* EDA, on medical images, that are typicall difficult to disstiguos for non-medical specialist (see examples on slides below)
+* automated comparison and selection of large number of models, TF feature extreaction networks, and image classyfication schemas.   
+* model optimization,   
+* error analysis     
+* baseline selection. 
+The piepline, uses only basic, python libraries, such as scipy, tensofrflow, and matplolib, and can be used with python >3.6
+   
+> PyClass has been developed prior to feasibility study, as part of the SkinDiagnosticAI initiative, and was tested with several other datasets (see example below).
+It can be used independepntly to conduct other projects, with minimal code modyffications, in config files.
 
-#### Interact with the code and data examples
-I prepared a short introduction to PyClass for Applied Mashine Leanring Days (AMLD 2021),
-In this course, you may use PyCklass on HAM10000 interactively, with Renku platform provided by Swiss Data Science Center, SDSC
-The same, models and data were used, as with the feasibility study presented on GibHub, except the number fo models and images is considerably smaller (only few hundresds) 
+See how PyClass was used for develoment of reliable classificaiton models of vehicles on roads on Swissroads project https://github.com/PawelRosikiewicz/Swissroads
+
+### Introductio to PyClass with SkindDiagnosticAI, as a working example 
+
+#### Interact with the code and data
+I prepared a short introduction to PyClass, and SkinDiagnosticAI for Applied Mashine Leanring Days (AMLD 2021),
+In this course, you may use PyCklass on HAM10000 dataset, ie. the dsame dataset that I used with feasibility study
+The code may be run, and modified in vitrual enviroment on Renku platform provided by Swiss Data Science Center, SDSC
+The same, models and dataset were used with the feasibility study presented here, on GibHub, except the number fo models and images is considerably smaller on Renku (only few hundresds) 
 
 #### to play with the code, follow these instructions:
 * Got to: SkinDiagnosticAI, with PyClass implemented at SDCS  
@@ -60,13 +74,15 @@ The same, models and data were used, as with the feasibility study presented on 
   * you may open and try each of them, 
   * all functions, and coffins are in “src” directory 
   * The code was explained on my workshop @AMLD: 
-  * My presentation on SkinDiagnosticAI project: https://youtu.be/W624gdkDqRQ?t=491
-  * Fully annotated code version is on: GitHub
+* follow the instreuctions withint each notebook, 
+  * all functions have help available ... help(<function_name>)
 
 ## Presentation on SkinDiagnosticAI Project
-* all images were created wiht PyClass AI workbech
 * the slides shows full analyis done on over 5000 compared models and data treatment procedures, 
-* Jupyter notebooks in notebook/ folder shows light vervion of that analyis that can be reapeated by the user and build up to any number of compared models, 
+* Jupyter notebooks in notebook folder shows light vervion of that analyis that can be reapeated by the user and build up to any number of compared models, 
+* for more information see: My presentation on SkinDiagnosticAI project: https://youtu.be/W624gdkDqRQ?t=491
+
+> all images were created wiht PyClass AI workbech
 
 ![skindiagnosticai presentation slide](images/Slide1.png)
 ![skindiagnosticai presentation slide](images/Slide2.png)
