@@ -15,7 +15,7 @@ Copyright (C) 2021.01.30 Pawel Rosikiewicz
 Comparison of 5000 AI methods for cancer detection and classyfication on dermatoscopic images from Harvard HAM10000 dataset using FastClassAI workbench   
 
 ## About SkinDiagnosticAI
-Skin  Diagnostic AI is an open source projects created to develop application for medical specialists that will help identifying potential skin cancer, and collect dermatoscopic images for medical community. It will also hep to patients to store their images in easy and accessible way on personal devices.
+Skin  Diagnostic AI is an open source project created to develop application for medical specialists that will help identifying potential skin cancer with camera low cost devices, and collect dermatoscopic images for medical community. It will also help to patients to store their images in easy and accessible way on their personal devices, and potentiall provide fast diagnosis, with the risk of cancer estimated based on available images. Furthermore, the application shoudl allow, collecting, clustering and storing mutlitple images from the same patient, thus allowing for faster, and more speciffic patient-doctor interaction. 
 
 more info at: https://simpleai.ch/skin-diagnostic-ai/
 
