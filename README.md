@@ -17,6 +17,8 @@ Comparison of 5000 AI methods for cancer detection and classyfication on dermato
 ## About SkinDiagnosticAI
 Skin  Diagnostic AI is an open source projects created to develop application for medical specialists that will help identifying potential skin cancer, and collect dermatoscopic images for medical community. It will also hep to patients to store their images in easy and accessible way on personal devices.
 
+more info at: https://simpleai.ch/skin-diagnostic-ai/
+
 ## About the project
 Here, I present feasibility study done for SkinDiagnosticAI. 
 The goals of the that study were as follow: 
