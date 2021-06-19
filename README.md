@@ -4,11 +4,11 @@
 ## Detecting Skin Cancer with Low cost devices and AI technology
 ## Project: Feasibility study with open source data and PyClass AI workbench
       
-Author: __Pawel Rosikiewicz, Founder, and Team Leader at SwissAI__  
+Author: __Pawel Rosikiewicz, Product Owner & Lead Developer__  
 Contact: prosikiewicz@gmail.com    
 License: __MIT__    
 ttps://opensource.org/licenses/MIT        
-Copyright (C) 2021.01.30 Pawel Rosikiewicz  
+Copyright (C) 2021.06.14 Pawel Rosikiewicz  
 
 
 </br>
@@ -41,8 +41,8 @@ Notebooks presented in this repository are part of feasibility study conducted f
     - to evaluate what statistics and error fucntions should be used for developing final, and ensemble models,
     - to compare different methods for results presentation that are most usefull for medical experts and non-medical users
   * SCOPE:
-    * in total, over `5000 different models` were evaluated
-    * here, in GiHub repository, I present the shorter version that allows training and evaluation of `250 selected models`. The results from other models are presented on `slides at the end of this file`. All 5000 models, or more, can be easily retrained and used wiht the current code implementation, after modyfying configuraiton files for additional parameter values, and model types. 
+    * in total, over `5000 different models` were evaluated in the project.
+    * here, on GiHub repository, I present the shorter version of that project, which allows training and evaluation of `250 selected models` on HAM10000 dataset of skin cancer images. The results from all 5000 models are presented on `slides at the end of this file`. All 5000 models, or more, can be easily retrained and used wiht the current code implementation, after modyfying configuraiton files for additional parameter values, and model types. 
   * > NOTE: selected models and PyClass outputs can be used as __Proof Of Concept__, or an __early stage MVP__, thanks to reporting capability of the PyClass on the medical data
 * __Step 3.__ to evaluate __business value proposition__ of different models, and consult them with users and domain experts
 * __Step 4.__ __to deploy the pipeline__ with selected models on the cloud, and use it as __Proof of Concept__ produc, that can be used to generate actionable results, 
@@ -54,7 +54,6 @@ Notebooks presented in this repository are part of feasibility study conducted f
 The notebooks, and software presented in this repository were used to conduct Steps 1-3, of the SkinDiagnosticAI feasibility study. The `slides`attached below the text show results from all steps 1-5
 
 ### __About PyClass__
-
 PyClass is an open-sourse, AI workbench for development of classyficiton models for medical images, and evaluation of medical datasets.
 It's main functionalities are:
 * Data preparation:
@@ -88,10 +87,7 @@ It's main functionalities are:
 
 </br>
 
-  > Note current example can be run as is, all configs and data were already prepared for You
-  > If you would like to create `your own project wiht PyClass`, or add new models and conditions to that project, you need need to start with project_suetup steps 1-3, that were described in separate notebooks, see `project_setup/01 - 03 ... notebooks`
-
-### before you start
+### __Before you start__
 * Clone repository
 * [create conda enviroment](https://conda.io/projects/conda/en/latest/user-guide/tasks/manage-environments.html#creating-an-environment-with-commands)
   * use __`src/env/skindiagnosticai_conda.ylm`__
@@ -103,9 +99,21 @@ It's main functionalities are:
 
 </br>
 
-### __- 1 - PyClass Setup and Data Preparation__
+### __- 1 - Download the data, and PyClass Setup__
 
-* __01. Set PyClass enviroment__
+
+</br>
+
+* __Download the data__ 
+  * __HAM10000 dataset__, it is a large collection of multi-source dermatoscopic images (100015 images) of common pigmented skin lesions, that have 7 classes of images, labelled by medical experts, 
+  * __Source__ : [LINK](https://dataverse.harvard.edu/dataset.xhtml?persistentId=doi:10.7910/DVN/DBW86T)
+  * __Size__; Apoprox 3GB
+  * __Dataset Version__; HAM10000 dataset, has only one version, at the time of this project development, that was published in 2018.
+  * __License__; Non-Commercial purposes only, 
+
+</br>
+
+* __01. Setup PyClass enviroment__
     * NOTEBOOK: __`project_setup/01_Setup.ipynb`__ 
     * in this step you will:
       * Setting Up Project Enviroment with proper directory structure
@@ -117,6 +125,7 @@ It's main functionalities are:
         * `dataset_configs.py`: contains dictionaries used to label images in each class, provide colors etc, select classes for cutom statistics, etc,,
         * `config_functions.py`: special functions used to select files for data processing and module training,
     > NOTE: each config file contains detailed intrsuctions, on how to create them, 
+
 </br>
 
 * __02. Data Preparation__
@@ -129,7 +138,8 @@ It's main functionalities are:
     * it includes, donwloading the images fron Harvard dataverse, or Kaggle, (links are in notebooks)
     * cleaning, the images, and organizing in train/test/valid folders, with separate folders containg images from each class, named after class name
     * dividing large dataset into smaller subsets, or 
-    * __Caution__ data used for de-novo cnn models, are not divided into smaller subsets, these are kept in one folder to allow keras image generators creating augmented images, while trainign the model,
+    * __Caution__ data used for de-novo cnn models, are not divided into smaller subsets, these are kept in one folder to allow keras image generators creating augmented images, while trainign the model
+
 </br> 
 
 * __03. Feature extraction__
@@ -144,12 +154,18 @@ It's main functionalities are:
         * option 2. you may donwload the model to `model/` directory, and use it with the same function
         * PyClass will work with any number of models 
     * __Caution__: model name, and potential url must be added to tfhub_configs.py (see instruction in the file directly)
+
 </br>
 
-### __- 2 - EDA with PyClass for SkinDiagnosticA__
-> PyClass provides automated functions for EDA
+*  > NOTE: current code examples can be run as is, all configs and data were already prepared for You. If you would like to create `your own project wiht PyClass`, or add more models and conditions to SkinDiagnosticAI project, you need modify, configuration file, and potentiall, donwload preffered models for Tensorflow-hub. Detailed instruction are in `project_setup/01 - 03 ... notebooks`
 
-* GOALS:
+</br>
+
+### __- 2 - EDA with PyClass for SkinDiagnosticAI__
+
+* > PyClass provides automated several functions for EDA, that were presented in the notebooks. All funciton have `help()` available and  can be used to any image dataset with large number of images, in a limited number of classes.
+
+* __EDA GOALS:__
   * __1. To answer following questions__
     * what is the composition of the dataset?
     * does different classes have similar size? 
@@ -168,7 +184,25 @@ It's main functionalities are:
   * to understand what preprocessing steps, can be required to bild the most optimal baseline, tranfer learning and deep learnign models,   
 </br>
 
+* #### __Fig 1.__ Example of results generated with PyClass for images sampled from HAM1000 dataset, grouped into 7 classes of skin changes, including 6 different types odf skin cancer (`Cancer Detection and Classyfication model`)
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-13.png)
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-11.png)
+
+* #### __Fig 2.__ Example of results generated with PyClass for images sampled from HAM1000 dataset, grouped into 3 classes of skin changes, presenting low, medium, and high risk of becoming metastatic cancer (`Cancer Risk Groups model`).
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-14.png)
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-12.png)
+
+* #### __Fig 3.__ `PyClass Panel for selection of feature extraction models`, that allows clustering images with features extracted using pretrained cnn. By default, the classyfication searches the same number of calsses, as in the raw data, but it can be set to any number, in order to identify hidden clusters of images, or cluster of images with similar features. Ideally, feature extraction module, shodul allow separating each class into separate cluster, and provides unique features, visible on a heatmap. in addition, PyClass allows sample images in each cluster, or use the clustering to display images classified with other models. 
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-15.png)
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-16.png)
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-17.png)
+![skindiagnosticai presentation slide](images/EDA_with_PyClass/Unknown-18.png)
+
 </br>
+
+
+
+
 
 ---
 ## __RUN  THE ANALYSIS IN INTERACTIVE ENVIROMENT WIOTHOUT INSTALLATION OF ANY SOFTWARE__
