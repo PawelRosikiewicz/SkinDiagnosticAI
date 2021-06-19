@@ -60,9 +60,6 @@ Main functions are as follow:
 
 
 
-
-
-
 ## __Data Preparation with PyClass for SkinDiagnosticAI__
 
 > current example can be run as is, all configs and data were already prepared for You
@@ -83,8 +80,11 @@ Main functions are as follow:
 
 * __02. Data Preparation__
     * NOTEBOOK: __`project_setup/02_[a:c]_Data_Preparation.ipynb`__
-      * and: __`01_EDA_part1_and_Data_Preparation.ipynb`__ in notebook folder, for presentation purposes
-    * Data preparation, using PyClass functions was done in`project_setup/02_a-c... notebooks`
+      * and: __`01_Data_Preparation.ipynb`__ 
+    * in this step you will
+      * perform quick EDA on raw data, 
+        > IMPORTANT: `IMAGE EXAMPLES FROM EACH CLASS`are in 02_EDA.ipynb`, in order to keep this notebook relatively small 
+      * you will prepare summary table with names and classes of filtered images (eg with no missing data) and all associated metadata that will be used lateron with PyClass to build different classyficaiton models
     * it includes, donwloading the images fron Harvard dataverse, or Kaggle, (links are in notebooks)
     * cleaning, the images, and organizing in train/test/valid folders, with separate folders containg images from each class, named after class name
     * dividing large dataset into smaller subsets, or 
@@ -97,9 +97,12 @@ Main functions are as follow:
       * b) use of the shelf solutions provided by `skilearn, keras, and tensorFlow`, with features extracted using pretrained convolutional networks, downloaded from tf-hub, or other location.
     * to extract features follow the instructions in `project_setup/03_a-c... notebook`
     * models: 
-        * option 1. you may use TF model url,
-        * option 2. you may donwload the model to `model/` directory, and use them with the same function
+        * option 1. PyClass may donwload the model from tf-hub directly, with url,
+          > not hoever, that this solution may depend on quality of the internet connection, and the modle may need to be donwloaded several times if you repeat the analyis,
+        * option 2. you may donwload the model to `model/` directory, and use it with the same function
+        * PyClass will work with any number of models 
     * __Caution__: model name, and potential url must be added to tfhub_configs.py (see instruction in the file directly)
+
 
 
 ## __EDA with PyClass for SkinDiagnosticA__
