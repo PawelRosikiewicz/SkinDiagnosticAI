@@ -69,7 +69,7 @@ Main functions are as follow:
 > If you would like to create `your own project wiht PyClass`, or add new models and conditions to that project, you need need to start with project_suetup steps 1-3, that were described in separate notebooks, see `project_setup/01 - 03 ... notebooks`
 
 * __01. Set PyClass enviroment__
-    * NOTEBOOK: __`notebooks/01_Setup.ipynb`__ 
+    * NOTEBOOK: __`project_setup/01_Setup.ipynb`__ 
     * in this step you will:
       * Setting Up Project Enviroment with proper directory structure
       * clone/download PyClass repository, 
@@ -82,21 +82,24 @@ Main functions are as follow:
     > NOTE: each config file contains detailed intrsuctions, on how to create them, 
 
 * __02. Data Preparation__
+    * NOTEBOOK: __`project_setup/02_[a:c]_Data_Preparation.ipynb`__
+      * and: __`01_EDA_part1_and_Data_Preparation.ipynb`__ in notebook folder, for presentation purposes
     * Data preparation, using PyClass functions was done in`project_setup/02_a-c... notebooks`
     * it includes, donwloading the images fron Harvard dataverse, or Kaggle, (links are in notebooks)
     * cleaning, the images, and organizing in train/test/valid folders, with separate folders containg images from each class, named after class name
     * dividing large dataset into smaller subsets, or 
     * __Caution__ data used for de-novo cnn models, are not divided into smaller subsets, these are kept in one folder to allow keras image generators creating augmented images, while trainign the model,
  
- 
-   
 * __03. Feature extraction__
-    * PyClass provides you with two options, You may either use `ne-novo cnn networks` for classyficaiton of images, or you may use `keras and skilearn models`, on extracted features with pretrained convolutional networks, downloaded from tf-hub, or other location.
-    * to extract features follwo the instructions in `project_setup/02_a-c... notebook`
+    * NOTEBOOK: __`project_setup/03_Feature_Extraction.ipynb`__
+    * PyClass provides you with two options, to build classyficaiton models
+      * a) use`ne-novo cnn networks` for classyficaiton of images, 
+      * b) use of the shelf solutions provided by `skilearn, keras, and tensorFlow`, with features extracted using pretrained convolutional networks, downloaded from tf-hub, or other location.
+    * to extract features follow the instructions in `project_setup/03_a-c... notebook`
     * models: 
-        * option 1. you may use url, that needs to be added to `model_configs`
+        * option 1. you may use TF model url,
         * option 2. you may donwload the model to `model/` directory, and use them with the same function
-   
+    * __Caution__: model name, and potential url must be added to tfhub_configs.py (see instruction in the file directly)
 
 
 ## __EDA with PyClass for SkinDiagnosticA__
