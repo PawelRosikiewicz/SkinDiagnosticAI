@@ -42,7 +42,7 @@ The study was conducted in five major steps, with the following goals:
 The notebooks, and software presented in this repository were used to conduct Steps 1-3. 
 The `slides`attached below the text show selected results from all steps 1-5
 
-## __About PyClass__, 
+## __About PyClass__
 >  main tool used to conduct feasibility study
 
 PyClass is an open-sourse, AI workbench for development of classyficiton models for medical images.   
@@ -59,19 +59,28 @@ Main functions are as follow:
 > See how PyClass was used for develoment of reliable classification models of vehicles on roads https://github.com/PawelRosikiewicz/Swissroads
 
 
+
+
+
+
 ## __Data Preparation with PyClass for SkinDiagnosticAI__
 
 > current example can be run as is, all configs and data were already prepared for You
 > If you would like to create `your own project wiht PyClass`, or add new models and conditions to that project, you need need to start with project_suetup steps 1-3, that were described in separate notebooks, see `project_setup/01 - 03 ... notebooks`
 
-* __01. Create or modify PyClass configs__
-    * detailed instructions are also in the `project_setup/01_Setup` notebook
-    * each config file contains intrsuctions, on how to create them, 
-    * the configs, will control, all the functions used in notebooks, except for the `functions used for data presentaiton, and results summary`
-        * these functions, have all parameters described in help(<function_name>)
-    * all functions, have extensive help function that I encourage you to check.
+* __01. Set PyClass enviroment__
+    * NOTEBOOK: __`notebooks/01_Setup.ipynb`__ 
+    * in this step you will:
+      * Setting Up Project Enviroment with proper directory structure
+      * clone/download PyClass repository, 
+      * Download the data, and tf-hub models for feature extraction (optional)
+      * Prepare config files for the project
+        * `tfhub_configs.py`: configs on tf hub modules used for feature extraction
+        * `project_configs.py`: basic description of the dataset
+        * `dataset_configs.py`: contains dictionaries used to label images in each class, provide colors etc, select classes for cutom statistics, etc,,
+        * `config_functions.py`: special functions used to select files for data processing and module training,
+    > NOTE: each config file contains detailed intrsuctions, on how to create them, 
 
-  
 * __02. Data Preparation__
     * Data preparation, using PyClass functions was done in`project_setup/02_a-c... notebooks`
     * it includes, donwloading the images fron Harvard dataverse, or Kaggle, (links are in notebooks)
@@ -102,7 +111,7 @@ Main functions are as follow:
          * do I have sufficient number of images for making image classyfication
          * why some classes are imbalanced (if they are)            
                             
-     * __2. To plot image examples from each class_`
+     * __2. To plot image examples from each class__
         * image examples are provided with several other functions, or separately, with the function `plot_n_image_examples`, as below
                      
      * __3. Technical Exploration__  
