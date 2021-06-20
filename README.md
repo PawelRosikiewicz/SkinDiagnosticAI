@@ -1,14 +1,12 @@
-![skindiagnosticai title image](images/skindiagnosticai_title_image.png)
-
-# SkinDiagnosticAI; 
-## Detecting Skin Cancer with Low cost devices and AI technology
-## Project: Feasibility study with open source data and PyClass AI workbench
+# SkinDiagnosticAI; Detecting Skin Cancer with Low cost devices
+## Project: __Feasibility study__ with open source data and __PyClass__ workbench for classyffication of medical images
       
 Author: __Pawel Rosikiewicz, Product Owner & Lead Developer__  
 Contact: prosikiewicz@gmail.com    
-License: __MIT__    
-ttps://opensource.org/licenses/MIT        
+License: __MIT__         
 Copyright (C) 2021.06.14 Pawel Rosikiewicz  
+
+![poster image on the project](images/SkinDiagnosticAI_intro_slides/Slide7.jpeg)
 
 
 </br>
@@ -25,13 +23,18 @@ Skin  Diagnostic AI is an open source project created to develop application for
 
 More info on SkinDiagnosticAI project: https://simpleai.ch/skin-diagnostic-ai/
 
-### __About the project__
-#### __Feasibility study__   
+</br>
+
+### __About the project:__ Feasibility study presented in this repository   
 Notebooks presented in this repository are part of feasibility study conducted for SkinDiagnosticAI initiative. The study was conducted iteratively, in five major steps: 
 * __Step 1.__ To create PyClass - an automated piepline for analysis and classysfication of medical images
   * the piepline was developed using Swissroad dataset, that was smalled and easier to analize for non-medical specialist then dermatoscopic images,
   * later on, it was improved with medical images (dermatoscopic of skin cancer, and colon cancer) 
   * PyClass analysis of SwissRoad dataset can be find here: https://github.com/PawelRosikiewicz/Swissroads
+  * ![pyclass intro slide](images/Pyclass_images/Slide24.jpeg)
+
+</br>
+
 * __Step 2.__ To compare large number of AI models, with different diagnostic purposes using open source data from __Harvard database__ with skin images diagnosed by the group of medical experts
   * speciffic goals were as follow:
     - to identify main challenges with anylsis and classyfication of dermatosciopic images   
@@ -43,10 +46,27 @@ Notebooks presented in this repository are part of feasibility study conducted f
   * SCOPE:
     * in total, over `5000 different models` were evaluated in the project.
     * here, on GiHub repository, I present the shorter version of that project, which allows training and evaluation of `250 selected models` on HAM10000 dataset of skin cancer images. The results from all 5000 models are presented on `slides at the end of this file`. All 5000 models, or more, can be easily retrained and used wiht the current code implementation, after modyfying configuraiton files for additional parameter values, and model types. 
+    * ![poster image on the project](images/SkinDiagnosticAI_intro_slides/skindiagnosticai_models.png)
+    * ![poster image on the project](images/SkinDiagnosticAI_intro_slides/skin_diagnosticai_model_evaluation.png)
+     * ![poster image on the project](images/SkinDiagnosticAI_intro_slides/all_models_together.png) 
+
+  
   * > NOTE: selected models and PyClass outputs can be used as __Proof Of Concept__, or an __early stage MVP__, thanks to reporting capability of the PyClass on the medical data
+
+
+
+
+</br>
+
 * __Step 3.__ to evaluate __business value proposition__ of different models, and consult them with users and domain experts
+
+</br>
+
 * __Step 4.__ __to deploy the pipeline__ with selected models on the cloud, and use it as __Proof of Concept__ produc, that can be used to generate actionable results, 
   * > NOTE: `Steps. ` to 4 were conducted iteratively, several times`
+
+</br>
+
 * __Step 5.__ to perform __AI readiness assesment__, and to collect a set of final requirements for potential MVP
   * > NOTE: preliminary buisness proposal, ai feasibility assement, and  was create before stage 1. Here we used used the knowledge collected in feasibility study to update opur estimates,
 
@@ -55,6 +75,7 @@ The notebooks, and software presented in this repository were used to conduct St
 
 ### __About PyClass__
 PyClass is an open-sourse, AI workbench for development of classyficiton models for medical images, and evaluation of medical datasets.
+
 It's main functionalities are:
 * Data preparation:
   * cleaning, filtering, format validation
@@ -77,6 +98,12 @@ It's main functionalities are:
 * datasets cleaning
 
 * > Note: PyClass, was developed using only basic, python libraries, such as scipy, tensofrflow, and matplolib, and can be used with any version of python >3.6. See how PyClass was used for develoment of reliable classification models of vehicles on roads https://github.com/PawelRosikiewicz/Swissroads
+
+
+* __Fig.__ Examples of results generatzed with Pyclass fro SkinDiagnosticAI project, used to evaluate feature extraction cnn modules from tf-hub, 
+* ![pyclass intro slide](images/Pyclass_images/Slide5.jpeg)
+
+
 
 
 </br>
